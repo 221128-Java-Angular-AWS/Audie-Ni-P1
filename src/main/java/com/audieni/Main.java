@@ -12,8 +12,12 @@ public class Main {
         TicketDAO ticketDao = new TicketDAO();
         Set<Ticket> tickets = ticketDao.getAllTickets();
 
-        for (Ticket ticket : tickets) {
-            System.out.println(ticket);
+        for (Ticket t : tickets) {
+            System.out.println(t);
         }
+
+        User user = new User(2, "mary@gmail.com", "password2", false);
+        Ticket ticket = new Ticket(5678.90, "I wish I did not spend money.");
+        ticketDao.createNewTicket(user, ticket);
     }
 }

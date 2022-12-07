@@ -2,10 +2,7 @@ package com.audieni.models;
 
 import com.audieni.utils.ConnectionManager;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,5 +32,22 @@ public class TicketDAO {
         }
 
         return tickets;
+    }
+
+    public int createNewTicket(User user, Ticket ticket) {
+        try {
+            Connection connection = ConnectionManager.getConnection();
+            String sql = "INSERT INTO tickets (user_id, amount, description) VALUES (?,?,?);";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, user.getId());
+            pstmt.setDouble(2, ticket.getAmount());
+            pstmt.setString(3, ticket.getDescription());
+
+            return pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return -1;
     }
 }

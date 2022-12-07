@@ -25,6 +25,11 @@ public class Ticket {
         this.description = description;
     }
 
+    public Ticket(double amount, String description) {
+        this.amount = amount;
+        this.description = description;
+    }
+
     public Integer getId() {
         return id;
     }
