@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="AudieNiP1" />
+        <module name="Audie-Ni-P1" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="AudieNiP1" target="11" />
+      <module name="Audie-Ni-P1" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
