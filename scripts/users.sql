@@ -1,4 +1,4 @@
--- Initial setup of TABLE: users
+-- Generate table 'users' for testing
 
 DROP TABLE IF EXISTS users;
 

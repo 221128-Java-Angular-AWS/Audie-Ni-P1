@@ -1,4 +1,4 @@
--- Initial setup of TABLE: tickets
+-- Generate table 'tickets' for testing
 
 DROP TABLE IF EXISTS tickets;
 
