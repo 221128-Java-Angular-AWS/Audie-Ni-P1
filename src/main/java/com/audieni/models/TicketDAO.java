@@ -26,7 +26,6 @@ public class TicketDAO {
                 );
                 tickets.add(ticket);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
