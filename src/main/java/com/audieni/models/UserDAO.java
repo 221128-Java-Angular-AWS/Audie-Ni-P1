@@ -1,27 +1,79 @@
 package com.audieni.models;
 
+import com.audieni.exceptions.IncorrectPasswordException;
+import com.audieni.exceptions.UserNotFoundException;
 import com.audieni.utils.ConnectionManager;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
 public class UserDAO {
-    public Set<User> getAllUsers() {
-        Set<User> users = new HashSet<>();
+    private final Connection connection;
 
+    public UserDAO() {
+        this.connection = ConnectionManager.getConnection();
+    }
+
+    public void create(User user) {
         try {
-            Connection connection = ConnectionManager.getConnection();
-            String sql = "SELECT * FROM users;";
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            String sql = "INSERT INTO users (email, password) VALUES (?,?);";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setString(1, user.getEmail());
+            pstmt.setString(2, user.getPassword());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-            while (rs.next()) {
-                User user = new User(
+    public User authenticate(String email, String password) throws UserNotFoundException, IncorrectPasswordException {
+        try {
+            String sql = "SELECT * FROM users WHERE email = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setString(1, email);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                throw new UserNotFoundException("This user was not found.");
+            }
+
+            User user = new User(
                     rs.getInt("id"),
                     rs.getString("email"),
                     rs.getString("password"),
                     rs.getBoolean("manager")
+            );
+
+            if (user.getPassword().equals(password)) {
+                return user;
+            }
+
+            throw new IncorrectPasswordException("This password is incorrect.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Set<User> getAllUsers() {
+        Set<User> users = new HashSet<>();
+
+        try {
+            String sql = "SELECT * FROM users;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getBoolean("manager")
                 );
                 users.add(user);
             }
@@ -32,20 +84,29 @@ public class UserDAO {
         return users;
     }
 
-    public int createNewUser(User user) {
+    public void update(User user) {
         try {
-            Connection connection = ConnectionManager.getConnection();
-            String sql = "INSERT INTO users (email, password) VALUES (?,?);";
-            PreparedStatement pstmt = connection.prepareStatement(sql);
+            String sql = "UPDATE users SET email = ?, password = ?, manager = ? WHERE id = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
             pstmt.setString(1, user.getEmail());
             pstmt.setString(2, user.getPassword());
-
-            return pstmt.executeUpdate();
+            pstmt.setBoolean(3, user.isManager());
+            pstmt.setInt(4, user.getId());
+            pstmt.executeUpdate();
         } catch (SQLException e) {
-//            e.printStackTrace();
-            System.err.println(user.getEmail() + " is already registered.");
+            e.printStackTrace();
         }
+    }
 
-        return -1;
+    public void delete(User user) {
+        try {
+            String sql = "DELETE FROM users WHERE user_id = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setInt(1, user.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
+
