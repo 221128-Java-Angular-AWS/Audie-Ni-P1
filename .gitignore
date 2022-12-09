@@ -52,8 +52,14 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-# Properties files
+# More files
+target/
+.idea/
+*.iml
 *.properties
+node_modules/
+dist/
 
 # Removed console version of application
 Test.java
+
