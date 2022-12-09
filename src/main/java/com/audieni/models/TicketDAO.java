@@ -54,6 +54,32 @@ public class TicketDAO {
         return tickets;
     }
 
+    public Set<Ticket> getCertainTickets(String status) {
+        Set<Ticket> tickets = new HashSet<>();
+
+        try {
+            String sql = "SELECT * FROM tickets WHERE status = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setString(1, status);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Ticket ticket = new Ticket(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("description"),
+                        rs.getString("status")
+                );
+                tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tickets;
+    }
+
     public void update(Ticket ticket) {
         try {
             String sql = "UPDATE tickets SET user_id = ?, amount = ?, description = ?, status = ? WHERE id = ?;";

@@ -54,3 +54,6 @@ bin/
 
 # Properties files
 *.properties
+
+# Removed console version of application
+Test.java

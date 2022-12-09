@@ -1,5 +1,6 @@
 package com.audieni.models;
 
+import com.audieni.exceptions.ExistingUserException;
 import com.audieni.exceptions.IncorrectPasswordException;
 import com.audieni.exceptions.UserNotFoundException;
 import com.audieni.utils.ConnectionManager;
@@ -82,6 +83,23 @@ public class UserDAO {
         }
 
         return users;
+    }
+
+    public boolean checkExistingAccount(String email) throws ExistingUserException {
+        try {
+            String sql = "SELECT * FROM users WHERE email = ?";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (!rs.next()) {
+                throw new ExistingUserException("This user already exists.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
     public void update(User user) {
