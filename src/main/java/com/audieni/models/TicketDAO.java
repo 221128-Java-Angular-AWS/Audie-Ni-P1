@@ -54,11 +54,11 @@ public class TicketDAO {
         return tickets;
     }
 
-    public Set<Ticket> getCertainTickets(String status) {
+    public Set<Ticket> getUserTickets(Integer id, String status) {
         Set<Ticket> tickets = new HashSet<>();
 
         try {
-            String sql = "SELECT * FROM tickets WHERE status = ?;";
+            String sql = "SELECT * FROM tickets WHERE id = ? AND status = ?;";
             PreparedStatement pstmt = this.connection.prepareStatement(sql);
             pstmt.setString(1, status);
             ResultSet rs = pstmt.executeQuery();
