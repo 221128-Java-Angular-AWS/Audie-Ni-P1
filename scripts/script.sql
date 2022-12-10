@@ -1,4 +1,12 @@
 /*
+ * Show all current tables
+ */
+
+SELECT * FROM users;
+SELECT * FROM tickets;
+
+
+/*
  * Drop tables for regeneration
  */
 

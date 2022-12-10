@@ -89,9 +89,10 @@ public class UserDAO {
         try {
             String sql = "SELECT * FROM users WHERE email = ?";
             PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setString(1, email);
             ResultSet rs = pstmt.executeQuery();
 
-            if (!rs.next()) {
+            if (rs.next()) {
                 throw new ExistingUserException("This user already exists.");
             }
 
@@ -99,7 +100,7 @@ public class UserDAO {
             e.printStackTrace();
         }
 
-        return true;
+        return false;
     }
 
     public void update(User user) {

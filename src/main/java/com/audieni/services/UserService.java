@@ -13,10 +13,10 @@ public class UserService {
         this.dao = dao;
     }
 
-    public void registerUser(User user) throws ExistingUserException {
-        if (!dao.checkExistingAccount(user.getEmail())) {
-            dao.create(user);
-        }
+    public User registerUser(String email, String password) throws ExistingUserException {
+        User user = new User(email, password);
+        dao.create(user);
+        return user;
     }
 
     public User loginUser(String email, String password) throws UserNotFoundException, IncorrectPasswordException {
