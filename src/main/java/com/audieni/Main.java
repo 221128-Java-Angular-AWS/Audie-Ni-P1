@@ -2,16 +2,11 @@ package com.audieni;
 
 import com.audieni.api.TicketAPI;
 import com.audieni.api.UserAPI;
-import com.audieni.models.Ticket;
 import com.audieni.models.TicketDAO;
-import com.audieni.models.User;
 import com.audieni.models.UserDAO;
 import com.audieni.services.TicketService;
 import com.audieni.services.UserService;
 import io.javalin.Javalin;
-
-import java.util.Base64;
-import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
