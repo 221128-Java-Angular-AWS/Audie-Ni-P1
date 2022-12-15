@@ -54,11 +54,138 @@ public class TicketDAO {
         return tickets;
     }
 
-    public Set<Ticket> getUserTickets(Integer id, String status) {
+    public Set<Ticket> getAllTicketsByStatus(String status) {
         Set<Ticket> tickets = new HashSet<>();
 
         try {
-            String sql = "SELECT * FROM tickets WHERE id = ? AND status = ?;";
+            String sql = "SELECT * FROM tickets WHERE lower(status) = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setString(1, status);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Ticket ticket = new Ticket(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("description"),
+                        rs.getString("status")
+                );
+                tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tickets;
+    }
+
+    public Ticket getTicket(Integer id) {
+        try {
+            String sql = "SELECT * FROM tickets WHERE id = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new Ticket(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("description"),
+                        rs.getString("status")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Set<Ticket> getUserTickets(Integer userId, String status) {
+        Set<Ticket> tickets = new HashSet<>();
+
+        try {
+            String sql = "SELECT * FROM tickets WHERE user_id = ? AND lower(status) = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, status);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Ticket ticket = new Ticket(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("description"),
+                        rs.getString("status")
+                );
+                tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tickets;
+    }
+
+    public Ticket getUserTicket(Integer ticketId, String status) {
+        try {
+            String sql = "SELECT * FROM tickets WHERE id = ? AND lower(status) = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setInt(1, ticketId);
+            pstmt.setString(2, status);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                Ticket ticket = new Ticket(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("description"),
+                        rs.getString("status")
+                );
+                return ticket;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Set<Ticket> getAllTickets(Integer userId) {
+        Set<Ticket> tickets = new HashSet<>();
+
+        try {
+            String sql = "SELECT * FROM tickets WHERE user_id = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Ticket ticket = new Ticket(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("description"),
+                        rs.getString("status")
+                );
+                tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tickets;
+    }
+
+    public Set<Ticket> getPendingTickets(String status) {
+        Set<Ticket> tickets = new HashSet<>();
+
+        try {
+            String sql = "SELECT * FROM tickets WHERE status = ?;";
             PreparedStatement pstmt = this.connection.prepareStatement(sql);
             pstmt.setString(1, status);
             ResultSet rs = pstmt.executeQuery();
@@ -88,6 +215,7 @@ public class TicketDAO {
             pstmt.setDouble(2, ticket.getAmount());
             pstmt.setString(3, ticket.getDescription());
             pstmt.setString(4, ticket.getStatus());
+            pstmt.setInt(5, ticket.getId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

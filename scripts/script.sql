@@ -1,12 +1,4 @@
 /*
- * Show all current tables
- */
-
-SELECT * FROM users;
-SELECT * FROM tickets;
-
-
-/*
  * Drop tables for regeneration
  */
 
@@ -22,7 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
 	id SERIAL PRIMARY KEY,
 	email VARCHAR(200) NOT NULL UNIQUE,
 	"password" VARCHAR(200) NOT NULL,
-	manager BOOLEAN DEFAULT FALSE
+	manager BOOLEAN DEFAULT FALSE,
+	session_id VARCHAR(200) DEFAULT '-1'
 );
 
 INSERT INTO users (email, "password", manager) VALUES ('james@gmail.com', 'password1', TRUE);
@@ -31,8 +24,6 @@ INSERT INTO users (email, "password") VALUES ('robert@gmail.com', 'password3');
 INSERT INTO users (email, "password", manager) VALUES ('patricia@gmail.com', 'password4', TRUE);
 INSERT INTO users (email, "password") VALUES ('john@gmail.com', 'password5');
 INSERT INTO users (email, "password") VALUES ('jennifer@gmail.com', 'password6');
-
-SELECT * FROM users;
 
 
 /*
@@ -53,4 +44,14 @@ INSERT INTO tickets (user_id, amount, description) VALUES (3, 2345.67, 'I also s
 INSERT INTO tickets (user_id, amount, description) VALUES (5, 3456.78, 'I might have also spent money.');
 INSERT INTO tickets (user_id, amount, description) VALUES (6, 4567.89, 'I might have spent too much money.');
 
+
+/*
+ * Show all current tables
+ */
+
+SELECT * FROM users;
 SELECT * FROM tickets;
+
+
+
+

@@ -3,6 +3,8 @@ package com.audieni.services;
 import com.audieni.models.Ticket;
 import com.audieni.models.TicketDAO;
 
+import java.util.Set;
+
 public class TicketService {
     private final TicketDAO dao;
 
@@ -14,8 +16,36 @@ public class TicketService {
         dao.create(ticket);
     }
 
-    public void viewTicket(Ticket ticket) {
-        
+    public void updateTicket(Ticket ticket) {
+        dao.update(ticket);
+    }
+
+    public Set<Ticket> viewAllTickets() {
+        return dao.getAllTickets();
+    }
+
+    public Set<Ticket> viewAllTicketsByStatus(String status) {
+        return dao.getAllTicketsByStatus(status);
+    }
+
+    public Ticket viewAllTicketById(Integer id) {
+        return dao.getTicket(id);
+    }
+
+    public Set<Ticket> viewTicketsById(Integer userId, String status) {
+        return dao.getUserTickets(userId, status);
+    }
+
+    public Ticket viewTicketById(Integer ticketId, String status) {
+        return dao.getUserTicket(ticketId, status);
+    }
+
+    public Set<Ticket> viewAllTickets(Integer userId) {
+        return dao.getAllTickets(userId);
+    }
+
+    public Set<Ticket> viewPendingTickets() {
+        return dao.getPendingTickets("Pending");
     }
 
     public void deleteTicket(Ticket ticket) {

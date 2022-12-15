@@ -7,8 +7,17 @@ public class User {
     private String email;
     private String password;
     private boolean manager;
+    private String sessionId;
 
     public User() {}
+
+    public User(Integer id, String email, String password, boolean manager, String sessionId) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.manager = manager;
+        this.sessionId = sessionId;
+    }
 
     public User(Integer id, String email, String password, boolean manager) {
         this.id = id;
@@ -60,17 +69,25 @@ public class User {
         this.manager = manager;
     }
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return manager == user.manager && Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password);
+        return manager == user.manager && Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(sessionId, user.sessionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, password, manager);
+        return Objects.hash(id, email, password, manager, sessionId);
     }
 
     @Override
@@ -80,6 +97,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", manager=" + manager +
+                ", sessionId='" + sessionId + '\'' +
                 '}';
     }
 }

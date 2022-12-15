@@ -32,4 +32,20 @@ public class UserService {
             dao.delete(user);
         }
     }
+
+    public User getUser(int id) {
+        return dao.selectUser(id);
+    }
+
+    public User getUserBySessionId(String sessionId) {
+        return dao.selectBySessionId(sessionId);
+    }
+
+    public boolean getUserByEmail(String email) throws ExistingUserException {
+        return dao.checkExistingAccount(email);
+    }
+
+    public void updateUser(User user) {
+        dao.update(user);
+    }
 }

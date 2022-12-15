@@ -103,14 +103,60 @@ public class UserDAO {
         return false;
     }
 
+    public User selectUser(Integer id) {
+        try {
+            String sql = "SELECT * FROM users WHERE id = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getBoolean("manager")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public User selectBySessionId(String sessionId) {
+        try {
+            String sql = "SELECT * FROM users WHERE session_id = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setString(1, sessionId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getBoolean("manager"),
+                        rs.getString("session_id")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public void update(User user) {
         try {
-            String sql = "UPDATE users SET email = ?, password = ?, manager = ? WHERE id = ?;";
+            String sql = "UPDATE users SET email = ?, password = ?, manager = ?, session_id = ? WHERE id = ?;";
             PreparedStatement pstmt = this.connection.prepareStatement(sql);
             pstmt.setString(1, user.getEmail());
             pstmt.setString(2, user.getPassword());
             pstmt.setBoolean(3, user.isManager());
-            pstmt.setInt(4, user.getId());
+            pstmt.setString(4, user.getSessionId());
+            pstmt.setInt(5, user.getId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
