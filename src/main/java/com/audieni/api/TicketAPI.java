@@ -10,7 +10,6 @@ import io.javalin.http.Context;
 
 import java.util.Set;
 
-
 public class TicketAPI {
     static UserService userService = new UserService(new UserDAO());
     static TicketService ticketService = new TicketService(new TicketDAO());
@@ -59,14 +58,18 @@ public class TicketAPI {
     public static void ticketsStatus(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         String status = ctx.pathParam("status").toLowerCase();
-        if (sessionId != null) {
+        if (sessionId != null && (status.equalsIgnoreCase("pending") ||
+                status.equalsIgnoreCase("approved") || status.equalsIgnoreCase("denied"))) {
             User user = userService.getUserBySessionId(sessionId);
             Set<Ticket> tickets = ticketService.viewTicketsById(user.getId(), status);
             ctx.json(tickets);
             ctx.status(200);
         } else {
-            ctx.result("Not logged in.");
-            ctx.status(401);
+            if (sessionId == null) {
+                ctx.result("Not logged in.");
+            } else {
+                ctx.result("Invalid status.");
+            }
         }
     }
 
@@ -129,7 +132,8 @@ public class TicketAPI {
     public static void adminTicketsAllStatus(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         String status = ctx.pathParam("status").toLowerCase();
-        if (sessionId != null) {
+        if (sessionId != null && (status.equalsIgnoreCase("pending") ||
+                status.equalsIgnoreCase("approved") || status.equalsIgnoreCase("denied"))) {
             User user = userService.getUserBySessionId(sessionId);
             if (user.isManager()) {
                 Set<Ticket> tickets = ticketService.viewAllTicketsByStatus(status);
@@ -140,7 +144,11 @@ public class TicketAPI {
                 ctx.status(401);
             }
         } else {
-            ctx.result("Not logged in.");
+            if (sessionId == null) {
+                ctx.result("Not logged in.");
+            } else {
+                ctx.result("Invalid status.");
+            }
             ctx.status(401);
         }
     }
