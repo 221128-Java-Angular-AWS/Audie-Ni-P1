@@ -13,8 +13,8 @@ public class Main {
             ctx.status(200);
         });
 
-        app.get("/login", UserAPI::login);
-        app.get("/logout", UserAPI::logout);
+        app.post("/login", UserAPI::login);
+        app.post("/logout", UserAPI::logout);
         app.post("/register", UserAPI::register);
 
         app.get("/tickets", TicketAPI::tickets);

@@ -13,7 +13,8 @@ import java.util.Base64;
 public class UserAPI {
     static UserService userService = new UserService(new UserDAO());
 
-
+    // user info accepted using Postman's Authorization,
+    // sent through header encrypted in Base64
     public static void login(Context ctx) throws UserNotFoundException, IncorrectPasswordException {
         String sessionId = ctx.cookie("session_id");
         if (sessionId == null) {
@@ -35,21 +36,39 @@ public class UserAPI {
     }
 
     public static void logout(Context ctx) {
-        ctx.removeCookie("session_id");
-        ctx.status(200);
-    }
-
-    public static void register(Context ctx) throws ExistingUserException {
-        String auth = new String(Base64.getDecoder().decode(ctx.header("Authorization").replace("Basic ", "")));
-        String email = auth.split(":")[0];
-        String password = auth.split(":")[1];
-
-        if(!userService.getUserByEmail(email)) {
-            User user = userService.registerUser(email, password);
-            ctx.json(user);
+        String sessionId = ctx.cookie("session_id");
+        if (sessionId != null) {
+            User user = userService.getUserBySessionId(sessionId);
+            user.setSessionId("-1");
+            userService.updateUser(user);
+            ctx.removeCookie("session_id");
+            ctx.result("You have logged out.");
             ctx.status(200);
         } else {
-            ctx.result("Account with this email already exists.");
+            ctx.result("You never logged in.");
+            ctx.status(400);
+        }
+    }
+
+    // user info accepted using Postman's Authorization,
+    // sent through header encrypted in Base64
+    public static void register(Context ctx) throws ExistingUserException {
+        String sessionId = ctx.cookie("session_id");
+        if (sessionId == null) {
+            String auth = new String(Base64.getDecoder().decode(ctx.header("Authorization").replace("Basic ", "")));
+            String email = auth.split(":")[0];
+            String password = auth.split(":")[1];
+
+            if(!userService.getUserByEmail(email)) {
+                User user = userService.registerUser(email, password);
+                ctx.json(user);
+                ctx.status(200);
+            } else {
+                ctx.result("Account with this email already exists.");
+                ctx.status(400);
+            }
+        } else {
+            ctx.result("You are already logged in.");
             ctx.status(400);
         }
     }
