@@ -141,7 +141,7 @@ public class TicketDAO {
             if (rs.next()) {
                 Ticket ticket = new Ticket(
                         rs.getInt("id"),
-                        rs.getInt("usert_id"),
+                        rs.getInt("user_id"),
                         rs.getDouble("amount"),
                         rs.getString("description"),
                         rs.getString("status")
