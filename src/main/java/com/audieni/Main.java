@@ -2,17 +2,11 @@ package com.audieni;
 
 import com.audieni.api.TicketAPI;
 import com.audieni.api.UserAPI;
-import com.audieni.models.TicketDAO;
-import com.audieni.models.UserDAO;
-import com.audieni.services.TicketService;
-import com.audieni.services.UserService;
 import io.javalin.Javalin;
 
 public class Main {
     public static void main(String[] args) {
         Javalin app = Javalin.create().start(8080);
-        UserService userService = new UserService(new UserDAO());
-        TicketService ticketService = new TicketService(new TicketDAO());
 
         app.get("/ping", ctx -> {
             ctx.result("Pong!");
