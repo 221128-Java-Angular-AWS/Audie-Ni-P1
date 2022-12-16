@@ -34,11 +34,11 @@ public class UserService {
     }
 
     public User getUser(int id) {
-        return dao.selectUser(id);
+        return dao.selectUserByID(id);
     }
 
     public User getUserBySessionId(String sessionId) {
-        return dao.selectBySessionId(sessionId);
+        return dao.selectUserBySessionID(sessionId);
     }
 
     public boolean getUserByEmail(String email) throws ExistingUserException {

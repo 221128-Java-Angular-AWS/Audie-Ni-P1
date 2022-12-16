@@ -21,31 +21,31 @@ public class TicketService {
     }
 
     public Set<Ticket> viewAllTickets() {
-        return dao.getAllTickets();
+        return dao.selectAllTicketsByUserID();
     }
 
     public Set<Ticket> viewAllTicketsByStatus(String status) {
-        return dao.getAllTicketsByStatus(status);
+        return dao.selectAllTicketsByStatus(status);
     }
 
     public Ticket viewAllTicketById(Integer id) {
-        return dao.getTicket(id);
+        return dao.selectTicketByID(id);
     }
 
     public Set<Ticket> viewTicketsById(Integer userId, String status) {
-        return dao.getUserTickets(userId, status);
+        return dao.selectTicketsByUserIDStatus(userId, status);
     }
 
     public Ticket viewTicketById(Integer ticketId, String status) {
-        return dao.getUserTicket(ticketId, status);
+        return dao.selectTicketByTicketIDStatus(ticketId, status);
     }
 
     public Set<Ticket> viewAllTickets(Integer userId) {
-        return dao.getAllTickets(userId);
+        return dao.selectAllTicketsByUserID(userId);
     }
 
     public Set<Ticket> viewPendingTickets() {
-        return dao.getPendingTickets("Pending");
+        return dao.selectAllTicketsByStatus("Pending");
     }
 
     public void deleteTicket(Ticket ticket) {

@@ -61,7 +61,25 @@ public class UserDAO {
         return null;
     }
 
-    public Set<User> getAllUsers() {
+    public boolean checkExistingAccount(String email) throws ExistingUserException {
+        try {
+            String sql = "SELECT * FROM users WHERE email = ?";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                throw new ExistingUserException("This user already exists.");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public Set<User> selectAllUsers() {
         Set<User> users = new HashSet<>();
 
         try {
@@ -85,25 +103,7 @@ public class UserDAO {
         return users;
     }
 
-    public boolean checkExistingAccount(String email) throws ExistingUserException {
-        try {
-            String sql = "SELECT * FROM users WHERE email = ?";
-            PreparedStatement pstmt = this.connection.prepareStatement(sql);
-            pstmt.setString(1, email);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                throw new ExistingUserException("This user already exists.");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    public User selectUser(Integer id) {
+    public User selectUserByID(Integer id) {
         try {
             String sql = "SELECT * FROM users WHERE id = ?;";
             PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -125,7 +125,7 @@ public class UserDAO {
         return null;
     }
 
-    public User selectBySessionId(String sessionId) {
+    public User selectUserBySessionID(String sessionId) {
         try {
             String sql = "SELECT * FROM users WHERE session_id = ?;";
             PreparedStatement pstmt = this.connection.prepareStatement(sql);

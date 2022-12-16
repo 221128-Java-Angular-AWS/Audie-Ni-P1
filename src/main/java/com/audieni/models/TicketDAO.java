@@ -29,7 +29,7 @@ public class TicketDAO {
         }
     }
 
-    public Set<Ticket> getAllTickets() {
+    public Set<Ticket> selectAllTicketsByUserID() {
         Set<Ticket> tickets = new HashSet<>();
 
         try {
@@ -54,7 +54,7 @@ public class TicketDAO {
         return tickets;
     }
 
-    public Set<Ticket> getAllTicketsByStatus(String status) {
+    public Set<Ticket> selectAllTicketsByStatus(String status) {
         Set<Ticket> tickets = new HashSet<>();
 
         try {
@@ -80,7 +80,33 @@ public class TicketDAO {
         return tickets;
     }
 
-    public Ticket getTicket(Integer id) {
+    public Set<Ticket> selectAllTicketsByUserID(Integer userId) {
+        Set<Ticket> tickets = new HashSet<>();
+
+        try {
+            String sql = "SELECT * FROM tickets WHERE user_id = ?;";
+            PreparedStatement pstmt = this.connection.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Ticket ticket = new Ticket(
+                        rs.getInt("id"),
+                        rs.getInt("user_id"),
+                        rs.getDouble("amount"),
+                        rs.getString("description"),
+                        rs.getString("status")
+                );
+                tickets.add(ticket);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tickets;
+    }
+
+    public Ticket selectTicketByID(Integer id) {
         try {
             String sql = "SELECT * FROM tickets WHERE id = ?;";
             PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -103,7 +129,7 @@ public class TicketDAO {
         return null;
     }
 
-    public Set<Ticket> getUserTickets(Integer userId, String status) {
+    public Set<Ticket> selectTicketsByUserIDStatus(Integer userId, String status) {
         Set<Ticket> tickets = new HashSet<>();
 
         try {
@@ -130,7 +156,7 @@ public class TicketDAO {
         return tickets;
     }
 
-    public Ticket getUserTicket(Integer ticketId, String status) {
+    public Ticket selectTicketByTicketIDStatus(Integer ticketId, String status) {
         try {
             String sql = "SELECT * FROM tickets WHERE id = ? AND lower(status) = ?;";
             PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -153,58 +179,6 @@ public class TicketDAO {
         }
 
         return null;
-    }
-
-    public Set<Ticket> getAllTickets(Integer userId) {
-        Set<Ticket> tickets = new HashSet<>();
-
-        try {
-            String sql = "SELECT * FROM tickets WHERE user_id = ?;";
-            PreparedStatement pstmt = this.connection.prepareStatement(sql);
-            pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Ticket ticket = new Ticket(
-                        rs.getInt("id"),
-                        rs.getInt("user_id"),
-                        rs.getDouble("amount"),
-                        rs.getString("description"),
-                        rs.getString("status")
-                );
-                tickets.add(ticket);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return tickets;
-    }
-
-    public Set<Ticket> getPendingTickets(String status) {
-        Set<Ticket> tickets = new HashSet<>();
-
-        try {
-            String sql = "SELECT * FROM tickets WHERE status = ?;";
-            PreparedStatement pstmt = this.connection.prepareStatement(sql);
-            pstmt.setString(1, status);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                Ticket ticket = new Ticket(
-                        rs.getInt("id"),
-                        rs.getInt("user_id"),
-                        rs.getDouble("amount"),
-                        rs.getString("description"),
-                        rs.getString("status")
-                );
-                tickets.add(ticket);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return tickets;
     }
 
     public void update(Ticket ticket) {
