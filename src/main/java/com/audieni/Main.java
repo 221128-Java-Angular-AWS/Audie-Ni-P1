@@ -25,5 +25,9 @@ public class Main {
         app.post("/admin/tickets", TicketAPI::adminTickets);
         app.get("/admin/tickets/all", TicketAPI::adminTicketsAll);
         app.get("/admin/tickets/{status}", TicketAPI::adminTicketsAllStatus);
+
+        app.error(404, ctx -> {
+            ctx.result("404 Error");
+        });
     }
 }

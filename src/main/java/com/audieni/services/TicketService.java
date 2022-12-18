@@ -21,7 +21,7 @@ public class TicketService {
     }
 
     public Set<Ticket> viewAllTickets() {
-        return dao.selectAllTicketsByUserID();
+        return dao.selectAllTickets();
     }
 
     public Set<Ticket> viewAllTicketsByStatus(String status) {

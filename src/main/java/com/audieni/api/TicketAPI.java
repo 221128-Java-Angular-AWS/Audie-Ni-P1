@@ -14,6 +14,11 @@ public class TicketAPI {
     static UserService userService = new UserService(new UserDAO());
     static TicketService ticketService = new TicketService(new TicketDAO());
 
+    /**
+     * Displays all pending tickets belonging to the logged-in user.
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     */
     public static void tickets(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         if (sessionId != null) {
@@ -27,6 +32,11 @@ public class TicketAPI {
         }
     }
 
+    /**
+     * Displays all tickets (regardless of status) belonging to the logged-in user.
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     */
     public static void ticketsAll(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         if (sessionId != null) {
@@ -40,21 +50,37 @@ public class TicketAPI {
         }
     }
 
+    /**
+     * Submits a ticket (belonging to the logged-in user), which is defaulted pending. It requires a
+     * request body with an amount and description of the reimbursement for submission.
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     */
     public static void ticketsSubmit(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         if (sessionId != null) {
             User user = userService.getUserBySessionId(sessionId);
-            Ticket ticket = ctx.bodyAsClass(Ticket.class);
-            ticket.setUserId(user.getId());
-            ticketService.createTicket(ticket);
-            ctx.json(ticket);
-            ctx.status(200);
+            try {
+                Ticket ticket = ctx.bodyAsClass(Ticket.class);
+                ticket.setUserId(user.getId());
+                ticketService.createTicket(ticket);
+                ctx.json(ticket);
+                ctx.status(200);
+            } catch (Exception e) {
+                ctx.result("Not enough information for ticket submission.");
+                ctx.status(401);
+            }
         } else {
             ctx.result("Not logged in.");
             ctx.status(401);
         }
     }
 
+    /**
+     * Displays certain tickets (based on status) belonging to the logged-in user.
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     */
     public static void ticketsStatus(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         String status = ctx.pathParam("status").toLowerCase();
@@ -73,6 +99,13 @@ public class TicketAPI {
         }
     }
 
+    /**
+     * Display all pending tickets belonging to all users in the system to a logged-in user with eligible
+     * permissions (manager role). If valid form parameters are provided, managers can approve or deny tickets
+     * through their ticket ID.
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     */
     public static void adminTickets(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         String ticketId = ctx.queryParam("ticket_id");
@@ -111,6 +144,12 @@ public class TicketAPI {
         }
     }
 
+    /**
+     * Displays all tickets (regardless of status) belonging to all users in the system to a logged-in user
+     * with eligible permissions (manager role).
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     */
     public static void adminTicketsAll(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         if (sessionId != null) {
@@ -129,6 +168,12 @@ public class TicketAPI {
         }
     }
 
+    /**
+     * Displays certain tickets (based on status) belonging to all users in the system to a logged-in user
+     * with eligible permissions (manager role).
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     */
     public static void adminTicketsAllStatus(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         String status = ctx.pathParam("status").toLowerCase();

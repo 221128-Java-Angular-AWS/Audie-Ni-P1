@@ -13,8 +13,16 @@ import java.util.Base64;
 public class UserAPI {
     static UserService userService = new UserService(new UserDAO());
 
-    // user info accepted using Postman's Authorization,
-    // sent through header encrypted in Base64
+    /**
+     * Logs in the user through the database. Username and password is accepted through Postman's Authorization,
+     * which is passed as a Base64 encrypted string through the request header. If authenticated, the user's
+     * login session is tracked using a randomly generated session ID, which is stored into the database, as
+     * well as a browser cookie.
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     * @throws UserNotFoundException Exception thrown when user email does not exist in the database.
+     * @throws IncorrectPasswordException Exception thrown when password provided is incorrect.
+     */
     public static void login(Context ctx) throws UserNotFoundException, IncorrectPasswordException {
         String sessionId = ctx.cookie("session_id");
         if (sessionId == null) {
@@ -35,6 +43,12 @@ public class UserAPI {
         }
     }
 
+    /**
+     * Logs out the user through the database. The generated session ID from login is overwritten in the database
+     * to invalidate the session ID, as well as removed from the cookie.
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     */
     public static void logout(Context ctx) {
         String sessionId = ctx.cookie("session_id");
         if (sessionId != null) {
@@ -50,8 +64,13 @@ public class UserAPI {
         }
     }
 
-    // user info accepted using Postman's Authorization,
-    // sent through header encrypted in Base64
+    /**
+     * Registers a user through the database. Username and password is accepted through Postman's Authorization,
+     * which is passed as a Base64 encrypted string through the request header.
+     *
+     * @param ctx Context Object, for handling http-request, which contains the servlet request and response.
+     * @throws ExistingUserException
+     */
     public static void register(Context ctx) throws ExistingUserException {
         String sessionId = ctx.cookie("session_id");
         if (sessionId == null) {
@@ -73,6 +92,11 @@ public class UserAPI {
         }
     }
 
+    /**
+     * Generates a random session ID for use with authenticating a login session for the user.
+     *
+     * @return sessionId String Object containing a randomly generated Session ID of size n.
+     */
     public static String generateSessionId() {
         final String chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789";
         int n = 10;

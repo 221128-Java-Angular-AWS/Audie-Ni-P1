@@ -16,6 +16,11 @@ public class TicketDAO {
         this.connection = ConnectionManager.getConnection();
     }
 
+    /**
+     * Create a ticket into the database.
+     *
+     * @param ticket Ticket Object
+     */
     public void create(Ticket ticket) {
         try {
             String sql = "INSERT INTO tickets (user_id, amount, description) VALUES (?,?,?);";
@@ -29,7 +34,12 @@ public class TicketDAO {
         }
     }
 
-    public Set<Ticket> selectAllTicketsByUserID() {
+    /**
+     * Returns all tickets (as a Set) belonging to every user in the database.
+     *
+     * @return tickets Set of Ticket Objects belonging to every user.
+     */
+    public Set<Ticket> selectAllTickets() {
         Set<Ticket> tickets = new HashSet<>();
 
         try {
@@ -54,6 +64,12 @@ public class TicketDAO {
         return tickets;
     }
 
+    /**
+     * Returns all tickets (as a Set) belonging to all users by their status.
+     *
+     * @param status Status of a Ticket Object.
+     * @return tickets Set of Ticket Objects belonging to all users with a certain status.
+     */
     public Set<Ticket> selectAllTicketsByStatus(String status) {
         Set<Ticket> tickets = new HashSet<>();
 
@@ -80,6 +96,12 @@ public class TicketDAO {
         return tickets;
     }
 
+    /**
+     * Returns all tickets (as a Set) belonging to a user by their user ID.
+     *
+     * @param userId ID of a User Object.
+     * @return tickets Set of Ticket Objects belonging a user based on their user ID.
+     */
     public Set<Ticket> selectAllTicketsByUserID(Integer userId) {
         Set<Ticket> tickets = new HashSet<>();
 
@@ -106,6 +128,12 @@ public class TicketDAO {
         return tickets;
     }
 
+    /**
+     * Returns a ticket based on their ticket ID.
+     *
+     * @param id Ticket ID of Ticket Object.
+     * @return ticket Ticket Object based on their ticket ID.
+     */
     public Ticket selectTicketByID(Integer id) {
         try {
             String sql = "SELECT * FROM tickets WHERE id = ?;";
@@ -129,6 +157,13 @@ public class TicketDAO {
         return null;
     }
 
+    /**
+     * Returns a set of tickets based on its user ID and its status.
+     *
+     * @param userId User ID of User Object.
+     * @param status Status of Ticket Object.
+     * @return tickets Set of Ticket Objects belonging to a user and based on its status.
+     */
     public Set<Ticket> selectTicketsByUserIDStatus(Integer userId, String status) {
         Set<Ticket> tickets = new HashSet<>();
 
@@ -156,6 +191,13 @@ public class TicketDAO {
         return tickets;
     }
 
+    /**
+     * Returns a ticket based on its ticket ID and its status.
+     *
+     * @param ticketId Ticket ID of Ticket Object.
+     * @param status Status of Ticket Object.
+     * @return ticket Ticket Object based on ticket ID and its status.
+     */
     public Ticket selectTicketByTicketIDStatus(Integer ticketId, String status) {
         try {
             String sql = "SELECT * FROM tickets WHERE id = ? AND lower(status) = ?;";
@@ -181,6 +223,10 @@ public class TicketDAO {
         return null;
     }
 
+    /** Updates a ticket in the database to the new Ticket Object based on the ticket ID.
+     *
+     * @param ticket Ticket Object.
+     */
     public void update(Ticket ticket) {
         try {
             String sql = "UPDATE tickets SET user_id = ?, amount = ?, description = ?, status = ? WHERE id = ?;";
@@ -196,6 +242,11 @@ public class TicketDAO {
         }
     }
 
+    /**
+     * Delete a ticket from the database based on the ticket ID from passed Ticket Object.
+     *
+     * @param ticket Ticket Object.
+     */
     public void delete(Ticket ticket) {
         try {
             String sql = "DELETE FROM tickets WHERE id = ?;";
