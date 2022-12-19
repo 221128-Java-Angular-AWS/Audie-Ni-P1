@@ -117,10 +117,16 @@ public class TicketAPI {
                 if (ticketId != null && status != null) {
                     Ticket ticket = ticketService.viewTicketById(Integer.parseInt(ticketId), "pending");
                     if (ticket != null) {
-                        ticket.setStatus(status.substring(0, 1).toUpperCase() + status.substring(1));
-                        ticketService.updateTicket(ticket);
-                        ctx.json(ticket);
-                        ctx.status(200);
+                        if (status.equalsIgnoreCase("approved") ||
+                                status.equalsIgnoreCase("denied")) {
+                            ticket.setStatus(status.substring(0, 1).toUpperCase() + status.substring(1));
+                            ticketService.updateTicket(ticket);
+                            ctx.json(ticket);
+                            ctx.status(200);
+                        } else {
+                            ctx.result("Invalid ticket status.");
+                            ctx.status(400);
+                        }
                     } else {
                         ctx.result("Ticket is not pending.");
                         ctx.status(400);
