@@ -7,12 +7,7 @@ import io.javalin.Javalin;
 public class Main {
     public static void main(String[] args) {
         Javalin app = Javalin.create().start(8080);
-
-        app.get("/ping", ctx -> {
-            ctx.result("Pong!");
-            ctx.status(200);
-        });
-
+        
         app.put("/login", UserAPI::login);
         app.put("/logout", UserAPI::logout);
         app.post("/register", UserAPI::register);
