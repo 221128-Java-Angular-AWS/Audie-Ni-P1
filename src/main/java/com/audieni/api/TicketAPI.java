@@ -65,10 +65,10 @@ public class TicketAPI {
                 ticket.setUserId(user.getId());
                 ticketService.createTicket(ticket);
                 ctx.json(ticket);
-                ctx.status(200);
+                ctx.status(201);
             } catch (Exception e) {
                 ctx.result("Not enough information for ticket submission.");
-                ctx.status(401);
+                ctx.status(400);
             }
         } else {
             ctx.result("Not logged in.");

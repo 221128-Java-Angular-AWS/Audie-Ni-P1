@@ -26,16 +26,21 @@ public class UserAPI {
     public static void login(Context ctx) throws UserNotFoundException, IncorrectPasswordException {
         String sessionId = ctx.cookie("session_id");
         if (sessionId == null) {
-            String auth = new String(Base64.getDecoder().decode(ctx.header("Authorization").replace("Basic ", "")));
-            String email = auth.split(":")[0];
-            String password = auth.split(":")[1];
-            sessionId = generateSessionId();
-            User user = userService.loginUser(email, password);
-            user.setSessionId(sessionId);
-            userService.updateUser(user);
-            ctx.cookie("session_id", sessionId);
-            ctx.json(user);
-            ctx.status(200);
+            try {
+                String auth = new String(Base64.getDecoder().decode(ctx.header("Authorization").replace("Basic ", "")));
+                String email = auth.split(":")[0];
+                String password = auth.split(":")[1];
+                sessionId = generateSessionId();
+                User user = userService.loginUser(email, password);
+                user.setSessionId(sessionId);
+                userService.updateUser(user);
+                ctx.cookie("session_id", sessionId);
+                ctx.json(user);
+                ctx.status(200);
+            } catch (Exception e) {
+                ctx.result("This user does not exist.");
+                ctx.status(401);
+            }
         } else {
             User user = userService.getUserBySessionId(sessionId);
             ctx.json(user);
@@ -78,11 +83,16 @@ public class UserAPI {
             String email = auth.split(":")[0];
             String password = auth.split(":")[1];
 
-            if(!userService.getUserByEmail(email)) {
-                User user = userService.registerUser(email, password);
-                ctx.json(user);
-                ctx.status(200);
-            } else {
+            try {
+                if(!userService.getUserByEmail(email)) {
+                    User user = userService.registerUser(email, password);
+                    ctx.json(user);
+                    ctx.status(201);
+                } else {
+                    ctx.result("Account with this email already exists.");
+                    ctx.status(400);
+                }
+            } catch (Exception e) {
                 ctx.result("Account with this email already exists.");
                 ctx.status(400);
             }

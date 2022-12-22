@@ -18,12 +18,12 @@ CREATE TABLE IF NOT EXISTS users (
 	session_id VARCHAR(200) DEFAULT '-1'
 );
 
-INSERT INTO users (email, "password", manager) VALUES ('james@gmail.com', 'password1', TRUE);
-INSERT INTO users (email, "password") VALUES ('mary@gmail.com', 'password2');
-INSERT INTO users (email, "password") VALUES ('robert@gmail.com', 'password3');
-INSERT INTO users (email, "password", manager) VALUES ('patricia@gmail.com', 'password4', TRUE);
-INSERT INTO users (email, "password") VALUES ('john@gmail.com', 'password5');
-INSERT INTO users (email, "password") VALUES ('jennifer@gmail.com', 'password6');
+INSERT INTO users (email, "password", manager) VALUES ('james@gmail.com', 'password', TRUE);
+INSERT INTO users (email, "password") VALUES ('mary@gmail.com', 'password');
+INSERT INTO users (email, "password") VALUES ('robert@gmail.com', 'password');
+INSERT INTO users (email, "password", manager) VALUES ('patricia@gmail.com', 'password', TRUE);
+INSERT INTO users (email, "password") VALUES ('john@gmail.com', 'password');
+INSERT INTO users (email, "password") VALUES ('jennifer@gmail.com', 'password');
 
 
 /*
@@ -39,10 +39,12 @@ CREATE TABLE IF NOT EXISTS tickets (
 	CONSTRAINT fk_tickets_users FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-INSERT INTO tickets (user_id, amount, description) VALUES (2, 1234.56, 'I spent some money.');
-INSERT INTO tickets (user_id, amount, description) VALUES (3, 2345.67, 'I also spent some money.');
-INSERT INTO tickets (user_id, amount, description) VALUES (5, 3456.78, 'I might have also spent money.');
-INSERT INTO tickets (user_id, amount, description) VALUES (6, 4567.89, 'I might have spent too much money.');
+INSERT INTO tickets (user_id, amount, description) VALUES (2, 1234.56, 'Food');
+INSERT INTO tickets (user_id, amount, description) VALUES (2, 2345.67, 'Travel');
+INSERT INTO tickets (user_id, amount, description, status) VALUES (2, 3456.78, 'Hotel', 'Approved');
+INSERT INTO tickets (user_id, amount, description, status) VALUES (2, 4567.89, 'More Food', 'Denied');
+INSERT INTO tickets (user_id, amount, description) VALUES (3, 1234.56, 'Food');
+INSERT INTO tickets (user_id, amount, description) VALUES (5, 2345.67, 'Travel');
 
 
 /*

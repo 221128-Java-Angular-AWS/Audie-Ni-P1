@@ -13,8 +13,8 @@ public class Main {
             ctx.status(200);
         });
 
-        app.post("/login", UserAPI::login);
-        app.post("/logout", UserAPI::logout);
+        app.put("/login", UserAPI::login);
+        app.put("/logout", UserAPI::logout);
         app.post("/register", UserAPI::register);
 
         app.get("/tickets", TicketAPI::tickets);
@@ -22,7 +22,7 @@ public class Main {
         app.post("/tickets/submit", TicketAPI::ticketsSubmit);
         app.get("/tickets/{status}", TicketAPI::ticketsStatus);
 
-        app.post("/admin/tickets", TicketAPI::adminTickets);
+        app.put("/admin/tickets", TicketAPI::adminTickets);
         app.get("/admin/tickets/all", TicketAPI::adminTicketsAll);
         app.get("/admin/tickets/{status}", TicketAPI::adminTicketsAllStatus);
 
